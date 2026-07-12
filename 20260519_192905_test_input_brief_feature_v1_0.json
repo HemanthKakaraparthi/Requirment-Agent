@@ -1,0 +1,192 @@
+{
+  "title": "Test Input Brief Feature",
+  "version": "1.0",
+  "date": "2026-05-19",
+  "status": "Draft",
+  "prd_type": "Feature",
+  "author": "AI Requirement Agent",
+  "stakeholders": [
+    {
+      "name": "Hemanth Kakaraparthi",
+      "role": "Product Owner",
+      "email": "hemanthkakaraparthi@gmail.com"
+    },
+    {
+      "name": "TestOps Dev Team",
+      "role": "Engineering",
+      "email": null
+    }
+  ],
+  "problem_statement": "Users face delays in configuring experiments due to manual KPI validation and lack of sample size preview.",
+  "business_value": "Reducing setup time improves PM productivity and increases experiment throughput, leading to faster insights and potential revenue uplift.",
+  "goals": [
+    {
+      "goal": "Reduce experiment setup time",
+      "metric": "minutes/experiment",
+      "baseline": "~45 min currently",
+      "target": "< 15 min within 4 weeks of launch"
+    }
+  ],
+  "in_scope": [
+    "Core feature flow",
+    "API integration"
+  ],
+  "out_of_scope": [
+    "Mobile app",
+    "Offline mode"
+  ],
+  "personas": [
+    {
+      "name": "Product Manager",
+      "description": "Zone PM running A/B tests.",
+      "key_need": "Fast experiment creation."
+    }
+  ],
+  "functional_requirements": [
+    {
+      "id": "FR-01",
+      "requirement": "User can create a new experiment from the dashboard.",
+      "priority": "Must Have"
+    },
+    {
+      "id": "FR-02",
+      "requirement": "System validates KPI selection against data source.",
+      "priority": "Must Have"
+    },
+    {
+      "id": "FR-03",
+      "requirement": "User can preview estimated sample size.",
+      "priority": "Should Have"
+    }
+  ],
+  "non_functional_requirements": [
+    {
+      "id": "NFR-01",
+      "category": "Performance",
+      "requirement": "Page initial render",
+      "target": "< 2s on broadband"
+    },
+    {
+      "id": "NFR-02",
+      "category": "Security",
+      "requirement": "All endpoints behind SSO",
+      "target": "100% coverage"
+    }
+  ],
+  "user_stories": [
+    {
+      "id": "US-01",
+      "title": "Create a new experiment",
+      "as_a": "Product Manager",
+      "i_want_to": "start a new experiment from the My Experiments dashboard",
+      "so_that": "I can run an A/B test without involving the Data Science team",
+      "acceptance_criteria": [
+        {
+          "criterion": "Create button opens 5-step wizard",
+          "met": false
+        },
+        {
+          "criterion": "All mandatory fields validated before save",
+          "met": false
+        },
+        {
+          "criterion": "Experiment appears in My Experiments list",
+          "met": false
+        }
+      ],
+      "priority": "Must Have",
+      "story_points": 5,
+      "labels": [
+        "frontend",
+        "react"
+      ]
+    },
+    {
+      "id": "US-02",
+      "title": "Validate KPI selection",
+      "as_a": "Product Manager",
+      "i_want_to": "ensure KPI is valid and has data before proceeding",
+      "so_that": "I avoid wasted experiments with incorrect KPIs",
+      "acceptance_criteria": [
+        {
+          "criterion": "System checks KPI against Snowflake data",
+          "met": false
+        },
+        {
+          "criterion": "Invalid KPI triggers error message",
+          "met": false
+        },
+        {
+          "criterion": "User can re-select KPI without restarting wizard",
+          "met": false
+        }
+      ],
+      "priority": "Must Have",
+      "story_points": 3,
+      "labels": [
+        "backend",
+        "validation"
+      ]
+    },
+    {
+      "id": "US-03",
+      "title": "Preview sample size",
+      "as_a": "Product Manager",
+      "i_want_to": "see estimated sample size before launching experiment",
+      "so_that": "I can adjust parameters to meet statistical significance",
+      "acceptance_criteria": [
+        {
+          "criterion": "Sample size displayed after KPI validation",
+          "met": false
+        },
+        {
+          "criterion": "Estimate updates when parameters change",
+          "met": false
+        },
+        {
+          "criterion": "Fallback estimate shown if query times out",
+          "met": false
+        }
+      ],
+      "priority": "Should Have",
+      "story_points": 2,
+      "labels": [
+        "frontend",
+        "analytics"
+      ]
+    }
+  ],
+  "edge_cases": [
+    {
+      "scenario": "User leaves wizard halfway through",
+      "expected_behaviour": "Progress saved as draft; resumable."
+    },
+    {
+      "scenario": "KPI source returns no data",
+      "expected_behaviour": "Show error and allow KPI re-selection."
+    }
+  ],
+  "risks": [
+    {
+      "risk": "Snowflake query latency spikes",
+      "impact": "High — sample size estimator hangs",
+      "mitigation": "Add query timeout + fallback cached estimate."
+    }
+  ],
+  "technical_constraints": [
+    "FastAPI",
+    "React",
+    "ACS email relay",
+    "Postgres",
+    "AKS"
+  ],
+  "dependencies": [
+    "Snowflake connector in Data Onboarding"
+  ],
+  "open_questions": [
+    "Should experiment drafts auto-expire after 30 days?"
+  ],
+  "assumptions": [
+    "Users authenticated via Azure SSO"
+  ]
+}
